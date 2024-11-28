@@ -7,8 +7,8 @@ const bodySchema = [
     .trim()
     .notEmpty()
     .withMessage("First name is required")
-    .isLength({ max: 50 })
-    .withMessage("First name should be less than 50 characters"),
+    .isLength({ max: 25 })
+    .withMessage("First name should be less than 25 characters"),
   body("login.email")
     .exists({ checkFalsy: true })
     .withMessage("A valid email is required")
