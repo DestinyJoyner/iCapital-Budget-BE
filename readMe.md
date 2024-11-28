@@ -3,6 +3,10 @@
 ## Overview
 A RESTful API backend service for managing personal budgets and providing investment recommendations. Built with Node.js and Express.js.
 
+## API Links
+- Deployed API: [https://icapital-budget-be.onrender.com/](https://icapital-budget-be.onrender.com/)
+- Local Development: http://localhost:3001
+
 ## Tech Stack
 - Node.js
 - Express.js
@@ -12,9 +16,9 @@ A RESTful API backend service for managing personal budgets and providing invest
 ## API Endpoints
 
 ### Authentication
-- `POST /api/auth/register` - Register new user
-- `POST /api/auth/login` - User login
-- `POST /api/auth/logout` - User logout
+- `POST /auth/register` - Register new user
+- `POST /auth/login` - User login
+- `POST /auth/logout` - User logout
 
 ## Installation
 

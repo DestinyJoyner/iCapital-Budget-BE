@@ -1,6 +1,8 @@
 // DEPENDENCIES
 const express = require("express")
 
+const landingPageHTML = require("./data/landingPageStyle.js")
+
 // CONTROLLERS
 const registrationController = require("./controllers/registrationController.js")
 
@@ -12,7 +14,7 @@ app.use("/auth/register", registrationController)
 
 // ROUTES
 app.get("/", (req,res) => {
-    res.status(200).send("iCapital Budget Server")
+    res.status(200).send(landingPageHTML)
 })
 
 app.get("/not-found", (req, res) => {
