@@ -19,7 +19,7 @@ A RESTful API backend service for managing personal budgets and providing invest
 ## Installation
 
 # Clone repository
-git clone 
+git clone https://github.com/DestinyJoyner/iCapital-Budget-BE.git
 
 # Install dependencies
 npm install
