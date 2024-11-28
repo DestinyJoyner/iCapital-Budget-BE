@@ -1,16 +1,18 @@
 // DEPENDENCIES
 const express = require("express")
 
-const landingPageHTML = require("./data/landingPageStyle.js")
-
 // CONTROLLERS
 const registrationController = require("./controllers/registrationController.js")
 
+// CONFIG
 const app = express()
 
 // MIDDLEWARE
 app.use(express.json())
 app.use("/auth/register", registrationController)
+
+// DATA FILES
+const landingPageHTML = require("./data/landingPageStyle.js")
 
 // ROUTES
 app.get("/", (req,res) => {
