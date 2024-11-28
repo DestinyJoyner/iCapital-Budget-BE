@@ -1,5 +1,9 @@
 const express = require("express");
 const registration = express.Router();
+const { bodySchema } = require("../middleware/validators/userValidators.js");
+const {
+  validationError,
+} = require("../middleware/validators/errorValidator.js");
 const {
   isEmailUnique,
   hashPass,
@@ -12,25 +16,42 @@ registration.get("/", (req, res) => {
 });
 
 // CREATE NEW USER
-registration.post("/", isEmailUnique, hashPass, async (req, res) => {
-  const newUser = await createUser(req.body.login);
+registration.post(
+  "/",
+  bodySchema,
+  validationError,
+  isEmailUnique,
+  hashPass,
+  async (req, res) => {
+    const newUser = await createUser(req.body.login);
 
-  if (!newUser.message) {
-    try {
-      const email = newUser.email;
-      const token = generateJWT(email);
-      newUser.token = token;
-      res.status(200).json(newUser);
-    } catch (jwtErr) {
+    if (!newUser.message) {
+      try {
+        const email = newUser.email;
+        const token = generateJWT(email);
+        newUser.token = token;
+        res.status(200).json(newUser);
+      } catch (jwtErr) {
+        res.status(500).json({
+          error: jwtErr,
+        });
+      }
+    } else {
       res.status(500).json({
-        error: jwtErr,
+        error: newUser.message,
       });
     }
-  } else {
-    res.status(500).json({
-      error: newUser.message,
-    });
   }
-});
+);
+
+/* 
+{"login":{
+    "email":"test@email.com",
+    "password":"1Password!",
+    "first_name": "Test"
+}
+}
+
+*/
 
 module.exports = registration;

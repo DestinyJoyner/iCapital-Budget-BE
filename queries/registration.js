@@ -1,4 +1,4 @@
-const db = require("../db/dbConfiq.js")
+const db = require("../db/dbConfig.js")
 
 // CREATE NEW USER
 async function createUser (userInfo) {

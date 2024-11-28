@@ -48,6 +48,7 @@ function generateJWT(userEmail) {
 async function isEmailUnique(req, res, next) {
   try {
     const user_email = req.body.login.email;
+
     const isUnique = await checkEmail(user_email);
 
     if (isUnique.error) {
