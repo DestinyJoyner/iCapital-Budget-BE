@@ -10,7 +10,7 @@ async function getUserPassword(userEmail) {
 
     return userPassword;
   } catch (err) {
-    return err;
+    return null;
   }
 }
 

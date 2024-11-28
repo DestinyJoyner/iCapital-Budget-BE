@@ -72,7 +72,7 @@ async function isEmailUnique(req, res, next) {
 
 // AUTHORIZE USER SIGN IN
 async function authorizeUser (req, res, next) {
-    const { email, password } = req.body
+    const { email, password } = req.body.login
     try{
         const isStoredEmail = await checkEmail(email)
         // if false, email is in db so check pass against hashpass
@@ -97,7 +97,7 @@ async function authorizeUser (req, res, next) {
         }
 
     }catch(emailErr) {
-        res.status(500).json({error: "Invalid Credentials"})
+        res.status(500).json({error: "Server error during authentication"})
     }
   
    
