@@ -13,7 +13,7 @@ const bodySchema = [
     .exists({ checkFalsy: true })
     .withMessage("A valid email is required")
     .isEmail()
-    .withMessage("A valid email is required"),
+    .withMessage("A valid email is required").normalizeEmail().toLowerCase(),
   body("login.password")
     .exists({ checkFalsy: true })
     .withMessage("A password is required")
@@ -31,7 +31,10 @@ const bodySchema = [
 
 // individual email & password check if necessary
 const emailSchema = [
-  body("login.email").exists({ checkFalsy: true }).isEmail(),
+  body("login.email").exists({ checkFalsy: true })
+  .withMessage("A valid email is required")
+  .isEmail()
+  .withMessage("A valid email is required").normalizeEmail().toLowerCase()
 ];
 
 const passwordSchema = [
