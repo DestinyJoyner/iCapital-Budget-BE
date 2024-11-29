@@ -53,5 +53,4 @@ const authTestData = {
         }
     }
 }
-
 module.exports = authTestData;
