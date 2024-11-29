@@ -1,6 +1,5 @@
 // DEPENDENCIES
 const express = require("express")
-require("dotenv").config()
 
 // CONTROLLERS
 const registrationController = require("./controllers/registrationController.js")
@@ -10,10 +9,9 @@ const userController = require("./controllers/userController.js")
 
 // CONFIG
 const app = express()
-// const mailerConfig = require("./config/mailerConfig")
 const transporter = require('./config/mailerConfig');
+require("dotenv").config()
 
-// mailerConfig(app)
 // MIDDLEWARE
 app.use(express.json())
 app.use("/auth/register", registrationController)
@@ -29,23 +27,7 @@ app.get("/", (req,res) => {
     res.status(200).send(landingPageHTML)
 })
 
-
-// app.get("/test-email", async (req, res) => {
-//     try {
-//         app.mailer.send('emails/test', {
-//             to: process.env.EMAIL_USER, // sending to yourself for testing
-//             subject: 'Test Email'
-//         }, (err) => {
-//             if (err) {
-//                 console.log(err);
-//                 return res.status(500).json({ error: "Error sending email" });
-//             }
-//             res.status(200).json({ message: "Test email sent!" });
-//         });
-//     } catch (err) {
-//         res.status(500).json({ error: "Server error" });
-//     }
-// });
+// NODEMAILER EMAIL TEST ROUTE
 app.get("/test-email", async (req, res) => {
     try {
         await transporter.sendMail({
@@ -57,8 +39,7 @@ app.get("/test-email", async (req, res) => {
         
         res.status(200).json({ message: "Test email sent!" });
     } catch (err) {
-        console.log(err);
-        res.status(500).json({ error: "Error sending email" });
+        res.status(500).json({ error: err });
     }
 });
 
