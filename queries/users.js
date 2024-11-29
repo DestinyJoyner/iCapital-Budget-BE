@@ -1,4 +1,5 @@
-const db = require("../db/dbConfig.js");
+const db = require("../config/dbConfig.js");
+const {getBudgetSummary, getBudgets} = require("./budgets.js")
 
 // GET USER PASS if email exist
 async function getUserPassword(userEmail) {
@@ -14,7 +15,31 @@ async function getUserPassword(userEmail) {
   }
 }
 
+// Delete user -> development purposes
+async function deleteUser (userId) {
+    try{
+        // get email and last budget summary returned for last snapshot of budget b4 delete
+        const finalBudgetSummary = await getBudgetSummary(userId)
+    
+        // delete from budget table first -> constraint
+        await db.none("DELETE FROM icapital_budgets WHERE user_id = $1", userId)
+
+        const email = await db.one("DELETE FROM icapital_users WHERE id= $1 RETURNING email", userId)
+
+        return {
+            email,
+            finalBudgetSummary,
+        }
+
+
+
+    }catch(err){
+        return err
+    }
+}
+
 
 module.exports = {
   getUserPassword,
+  deleteUser
 };

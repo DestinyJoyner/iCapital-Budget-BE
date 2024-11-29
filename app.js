@@ -4,14 +4,20 @@ const express = require("express")
 // CONTROLLERS
 const registrationController = require("./controllers/registrationController.js")
 const loginController = require("./controllers/loginController.js")
+const budgetController = require("./controllers/budgetController.js")
+const userController = require("./controllers/userController.js")
 
 // CONFIG
 const app = express()
+const transporter = require('./config/mailerConfig');
+require("dotenv").config()
 
 // MIDDLEWARE
 app.use(express.json())
 app.use("/auth/register", registrationController)
 app.use("/auth/login", loginController)
+app.use("/auth/budget", budgetController)
+app.use("/auth/user", userController)
 
 // DATA FILES
 const landingPageHTML = require("./data/landingPageStyle.js")
@@ -20,6 +26,23 @@ const landingPageHTML = require("./data/landingPageStyle.js")
 app.get("/", (req,res) => {
     res.status(200).send(landingPageHTML)
 })
+
+// NODEMAILER EMAIL TEST ROUTE
+app.get("/test-email", async (req, res) => {
+    try {
+        await transporter.sendMail({
+            from: process.env.EMAIL_USER,
+            to: process.env.EMAIL_USER,
+            subject: 'Test Email',
+            html: '<h1>Test Email</h1><p>If you see this, email is working!</p>'
+        });
+        
+        res.status(200).json({ message: "Test email sent!" });
+    } catch (err) {
+        res.status(500).json({ error: err });
+    }
+});
+
 
 app.get("/not-found", (req, res) => {
     res.status(404).json({

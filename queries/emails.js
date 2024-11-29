@@ -1,4 +1,4 @@
-const db = require("../db/dbConfig.js")
+const db = require("../config/dbConfig.js")
 
 // check if email is being used in db for new user sign up
 async function checkEmail (userEmail) {
