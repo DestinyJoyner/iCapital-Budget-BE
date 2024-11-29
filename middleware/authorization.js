@@ -36,8 +36,8 @@ async function hashPass(req, res, next) {
 // generate JWT
 //  1-24 hours after developemtn for expiresIn val
 
-function generateJWT(userEmail) {
-  const token = JWT.sign({ email: userEmail }, process.env.SECRET_TOKEN, {
+function generateJWT(userEmail, userId) {
+  const token = JWT.sign({ email: userEmail, id: userId }, process.env.SECRET_TOKEN, {
     expiresIn: "240h",
   });
 
@@ -81,7 +81,7 @@ async function authorizeUser (req, res, next) {
             // compare sent password w/ hashed value
             const isPassValid = await(bcrypt.compare(password, hashedPass.password_hash))
                 if(isPassValid){
-                    const token = generateJWT(email)
+                    const token = generateJWT(email, hashedPass.id)
                     // append token and user id to req.body
                     req.body.token = token
                     req.body.user_id = hashedPass.id

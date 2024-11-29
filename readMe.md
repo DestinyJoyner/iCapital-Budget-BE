@@ -13,12 +13,22 @@ A RESTful API backend service for managing personal budgets and providing invest
 - JSON Web Tokens (JWT)
 - bcrypt
 
-## API Endpoints
+## Authentication
+All routes except registration and login require a JWT token in the Authorization header:
 
-### Authentication
+authorization: `<your_JWT>`
+
+### Token Format
+- Tokens are issued upon successful login
+- Valid for 24 hours
+- Must be included in all protected route headers
+
+## API Endpoints
 - `POST /auth/register` - Register new user
 - `POST /auth/login` - User login
-- `POST /auth/logout` - User logout
+- `POST /auth/budget` - Add transaction
+- `GET /auth/budget` - Get transactions
+- `DELETE /auth/user` - Delete account
 
 ## Installation
 
@@ -26,10 +36,11 @@ A RESTful API backend service for managing personal budgets and providing invest
 git clone https://github.com/DestinyJoyner/iCapital-Budget-BE.git
 
 # Install dependencies
-npm install
+`npm install`
 
 # Start server
-npm run dev
-
+`npm run dev`
 ## Environment Variables
 PORT=3001
+
+SECRET_TOKEN= `<hexadecimal value>`
