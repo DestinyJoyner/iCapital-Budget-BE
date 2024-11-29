@@ -8,6 +8,7 @@ const {
   isEmailUnique,
   hashPass,
   generateJWT,
+  generateCryptoToken
 } = require("../middleware/authorization.js");
 const { createUser } = require("../queries/registration.js");
 
@@ -28,7 +29,19 @@ registration.post(
   isEmailUnique,
   hashPass,
   async (req, res) => {
+   try{
+    // VERIFY EMAIL BEFORE CREATING USER IN DB
+    const cryptoToken = generateCryptoToken()
+    // append token to login obj in body
+    req.body.login.verification_token = cryptoToken
+    // boolean to track if user verifies email -> also need updated users table column for verification
+    req.body.login.is_verified = false
+
     const newUser = await createUser(req.body.login);
+
+
+// come back when front end set up!!!!!
+
 
     if (!newUser.message) {
       try {
@@ -65,6 +78,12 @@ registration.post(
         error: newUser.message,
       });
     }
+   }catch(err){
+    res.status(500).json({
+        message: "Error creating user account",
+        error: err
+      })
+   }
   }
 );
 
