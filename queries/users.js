@@ -1,4 +1,4 @@
-const db = require("../db/dbConfig.js");
+const db = require("../config/dbConfig.js");
 const {getBudgetSummary, getBudgets} = require("./budgets.js")
 
 // GET USER PASS if email exist
