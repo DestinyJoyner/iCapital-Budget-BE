@@ -13,6 +13,8 @@ CREATE TABLE icapital_users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+DROP TABLE IF EXISTS icapital_budgets;
+
 CREATE TABLE icapital_budgets (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES icapital_users(id),
