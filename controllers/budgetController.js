@@ -24,7 +24,15 @@ budget.post("/", headerSchema, budgetSchema, validationError, verifyToken, async
     const addedBudget = await createBudget(body, id)
 
     if (!addedBudget.message) {
-        res.status(200).json(addedBudget);
+
+        // send back real-time budget summary values whenever new transaction is added
+        const updatedBudgetSummary = await getBudgets(id)
+        const responseObj = {
+            added_budget: addedBudget,
+            budget_summary: updatedBudgetSummary.budget_summary,
+            updated_transactions: updatedBudgetSummary.transactions
+        }
+        res.status(200).json(responseObj);
       } else {
         res.status(500).json(addedBudget.message);
       }

@@ -35,7 +35,7 @@ async function createBudget(body, userId) {
   const { category, amount, transaction_date, transaction_type } = body;
   try {
     const newBudget = await db.one(
-      "INSERT INTO icapital_budgets (user_id, category, amount, transaction_date, transaction_type) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+      "INSERT INTO icapital_budgets (user_id, category, amount, transaction_date, transaction_type) VALUES ($1, $2, $3, $4, $5) RETURNING id, category, amount, TO_CHAR(transaction_date, 'MM/DD/YYYY') AS transaction_date, transaction_type",
       [userId, category, amount, transaction_date, transaction_type]
     );
     return newBudget;
@@ -47,4 +47,5 @@ async function createBudget(body, userId) {
 module.exports = {
   getBudgets,
   createBudget,
+  getBudgetSummary
 };
