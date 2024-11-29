@@ -1,6 +1,6 @@
 const express = require("express");
 const budget = express.Router();
-const { verifyToken } = require("../middleware/budgetAuth.js");
+const { verifyToken } = require("../middleware/tokenAuth.js");
 const {headerSchema} = require("../middleware/validators/headerValidator.js")
 const{budgetSchema} = require("../middleware/validators/budgetValidators.js")
 const {validationError} = require("../middleware/validators/errorValidator.js")

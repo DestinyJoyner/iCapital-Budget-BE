@@ -4,15 +4,14 @@ const { body } = require("express-validator");
 function verifyAmount(amount) {
   let val = parseFloat(amount);
   const maxVal = 9999999999.99;
-  if (val <= 0) {
-    throw new Error("Amount must be greater than 0");
-  }
-  if (val > maxVal) {
-    throw new Error("Amount exceeds max value");
-  }
-  // round 2 decimal
-  val = Math.round(val * 100) / 100;
-  return val;
+  return val > 0 && val <= maxVal;
+  
+}
+
+function convertAmount (amount) {
+     // round 2 decimal
+  return  Math.round(amount * 100) / 100;
+ 
 }
 
 // custom sanitizer (methods) => Whatever the value that they return, is the value that the field will acquire.
@@ -27,8 +26,8 @@ const budgetSchema = [
     .exists()
     .withMessage("Amount is required")
     .isDecimal()
-    .withMessage("Amount must be a valid number")
-    .customSanitizer(verifyAmount),
+    .withMessage("Amount must be a valid number").custom(verifyAmount)
+    .customSanitizer(convertAmount),
 
   body("transaction_type")
     .exists()
