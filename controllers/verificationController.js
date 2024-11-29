@@ -36,8 +36,6 @@ verification.post("/", verificationSchema, validationError, async (req, res) => 
             error: err
         })
     }
-    
-    res.status(200).json("verify")
 })
 
 

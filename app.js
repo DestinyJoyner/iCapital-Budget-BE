@@ -1,5 +1,6 @@
 // DEPENDENCIES
 const express = require("express")
+const cors = require("cors");
 
 // CONTROLLERS
 const registrationController = require("./controllers/registrationController.js")
@@ -15,6 +16,7 @@ require("dotenv").config()
 
 // MIDDLEWARE
 app.use(express.json())
+app.use(cors());
 app.use("/auth/register", registrationController)
 app.use("/auth/login", loginController)
 app.use("/auth/budget", budgetController)
