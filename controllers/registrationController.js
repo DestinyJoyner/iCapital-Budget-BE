@@ -42,6 +42,7 @@ registration.post(
 
 // come back when front end set up!!!!!
 
+const verification_link = `frontendUrl/verification/${cryptoToken}`
 
     if (!newUser.message) {
       try {
@@ -55,7 +56,7 @@ registration.post(
           path.join(__dirname, "../data/emailTemplate.ejs"),
           {
             template: "registration",
-            details: newUser,
+            details: {...newUser, verification_link}
           }
         );
 
