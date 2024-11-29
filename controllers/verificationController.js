@@ -2,10 +2,12 @@ const express = require("express");
 const verification = express.Router();
 const {verifyUser} = require("../queries/verification.js")
 const {generateJWT} = require("../middleware/authorization.js")
+const {verificationSchema} = require("../middleware/validators/verificationValidator.js")
+const {validationError} = require("../middleware/validators/errorValidator.js")
 
 
 // route for frontend to ping from verification email to wait for response for verification
-verification.post("/", async (req, res) => {
+verification.post("/", verificationSchema, validationError, async (req, res) => {
     const {email, verification_token} = req.body
     try {
         const user = await verifyUser(email, verification_token)
