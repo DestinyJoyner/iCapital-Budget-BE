@@ -44,7 +44,7 @@ function generateJWT(userEmail, userId) {
     { email: userEmail, id: userId },
     process.env.SECRET_TOKEN,
     {
-      expiresIn: "240h",
+      expiresIn: "24h",
     }
   );
 
