@@ -11,6 +11,11 @@ const {
 } = require("../middleware/authorization.js");
 const { createUser } = require("../queries/registration.js");
 
+const ejs = require("ejs");
+const path = require("path");
+const transporter = require("../config/mailerConfig.js");
+require("dotenv").config();
+
 registration.get("/", (req, res) => {
   res.status(200).json("Registration Page");
 });
@@ -27,9 +32,28 @@ registration.post(
 
     if (!newUser.message) {
       try {
-        const email = newUser.email;
-        const token = generateJWT(email);
+        const { email, id } = newUser;
+
+        const token = generateJWT(email, id);
         newUser.token = token;
+
+        // access ejs file and send email here:
+        const emailBody = await ejs.renderFile(
+          path.join(__dirname, "../data/emailTemplate.ejs"),
+          {
+            template: "registration",
+            details: newUser,
+          }
+        );
+
+        //   send email
+        await transporter.sendMail({
+          from: process.env.EMAIL_USER,
+          to: email,
+          subject: "iCapital Budget Account Creation",
+          html: emailBody,
+        });
+
         res.status(200).json(newUser);
       } catch (jwtErr) {
         res.status(500).json({

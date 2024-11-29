@@ -1,0 +1,38 @@
+
+<%# Account Registration Verification Template %>
+<% if (template === 'registration') { %>
+    <!-- eventual verification link -->
+    <h2>Welcome to iCapital Budget!</h2>
+    <p>Hello <%= details.first_name %>,</p>
+    <p>Thank you for creating an account with us.</p>
+    
+<% } %>
+
+
+<%# Sign In MFA Verification Template %>
+
+
+<%# Deletion Email Template%>
+<% if (template === 'delete') { %>
+    <h2>Account Deletion Confirmation</h2>
+    <p>Your iCapital Budget account has been successfully deleted.</p>
+
+    <h3>Final Budget Summary</h3>
+    <ul>
+        <li>Total Income: $<%= details.finalBudgetSummary.total_income %></li>
+        <li>Total Expenses: $<%= details.finalBudgetSummary.total_expenses || 0 %></li>
+        <li>Final Balance: $<%= details.finalBudgetSummary.disposable_income %></li>
+    </ul>
+
+
+    <p>Thank you for using iCapital Budget!</p>
+<% } %>
+
+
+
+<%# Test Email Template%>
+<% if (template === 'test') { %>
+    <h1>Test Email</h1>
+    <p>Hello from iCapital Budget API!</p>
+    <p>If you're seeing this, email setup is working.</p>
+<% } %>
