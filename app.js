@@ -4,6 +4,7 @@ const express = require("express")
 // CONTROLLERS
 const registrationController = require("./controllers/registrationController.js")
 const loginController = require("./controllers/loginController.js")
+const budgetController = require("./controllers/budgetController.js")
 
 // CONFIG
 const app = express()
@@ -12,6 +13,7 @@ const app = express()
 app.use(express.json())
 app.use("/auth/register", registrationController)
 app.use("/auth/login", loginController)
+app.use("/auth/budget", budgetController)
 
 // DATA FILES
 const landingPageHTML = require("./data/landingPageStyle.js")
