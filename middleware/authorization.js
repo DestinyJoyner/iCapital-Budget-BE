@@ -113,10 +113,39 @@ function generateCryptoToken () {
     return crypto.randomBytes(32).toString('hex')
 }
 
+// authenticate authToken sent from front end
+
+// Add this to your existing authorization.js
+const authenticateToken = async (req, res, next) => {
+    try {
+        const authHeader = req.headers.authorization;
+        // "Bearer[0] token[1]"
+        const token = authHeader && authHeader.split(" ")[1]; 
+
+        if (!token) {
+            return res.status(400).json({ error: "No token provided" });
+        }
+
+        // Verify token
+        JWT.verify(token, process.env.SECRET_TOKEN, (err, decoded) => {
+            if (err) {
+                return res.status(400).json({ error: "Invalid token" });
+            }
+
+            // decoded = { email, id }
+            req.user = decoded; 
+            next();
+        });
+    } catch (error) {
+        res.status(400).json({ error: "Authentication failed" });
+    }
+};
+
 module.exports = {
   isEmailUnique,
   hashPass,
   generateJWT,
   authorizeUser,
-  generateCryptoToken
+  generateCryptoToken,
+  authenticateToken
 };
