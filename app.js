@@ -8,6 +8,7 @@ const loginController = require("./controllers/loginController.js")
 const budgetController = require("./controllers/budgetController.js")
 const userController = require("./controllers/userController.js")
 const verificationController = require("./controllers/verificationController.js")
+const tokenController = require("./controllers/tokenController.js")
 
 // CONFIG
 const app = express()
@@ -22,6 +23,7 @@ app.use("/auth/login", loginController)
 app.use("/auth/budget", budgetController)
 app.use("/auth/user", userController)
 app.use("/auth/verification", verificationController)
+app.use("/auth/token", tokenController)
 
 // DATA FILES
 const landingPageHTML = require("./data/landingPageStyle.js")
