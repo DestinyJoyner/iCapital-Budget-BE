@@ -3,7 +3,10 @@ const JWT = require("jsonwebtoken");
 const dotenv = require("dotenv");
 dotenv.config();
 const { checkEmail } = require("../queries/emails.js");
-const { getUserPassword } = require("../queries/users.js")
+const { getUserPassword } = require("../queries/users.js");
+
+// email verification
+const crypto = require("crypto");
 
 /* 
     req shape = req {
@@ -37,9 +40,13 @@ async function hashPass(req, res, next) {
 //  1-24 hours after developemtn for expiresIn val
 
 function generateJWT(userEmail, userId) {
-  const token = JWT.sign({ email: userEmail, id: userId }, process.env.SECRET_TOKEN, {
-    expiresIn: "240h",
-  });
+  const token = JWT.sign(
+    { email: userEmail, id: userId },
+    process.env.SECRET_TOKEN,
+    {
+      expiresIn: "24h",
+    }
+  );
 
   return token;
 }
@@ -71,41 +78,45 @@ async function isEmailUnique(req, res, next) {
 }
 
 // AUTHORIZE USER SIGN IN
-async function authorizeUser (req, res, next) {
-    const { email, password } = req.body.login
-    try{
-        const isStoredEmail = await checkEmail(email)
-        // if false, email is in db so check pass against hashpass
-        if(!isStoredEmail){
-            const hashedPass = await getUserPassword(email)
-            // compare sent password w/ hashed value
-            const isPassValid = await(bcrypt.compare(password, hashedPass.password_hash))
-                if(isPassValid){
-                    const token = generateJWT(email, hashedPass.id)
-                    // append token and user id to req.body
-                    req.body.token = token
-                    req.body.user_id = hashedPass.id
-                    next()
-                }
-                else {
-                    res.status(500).json({error: "Invalid Credentials"})
-                }
-
-        }
-        else {
-            res.status(500).json({error: "Invalid Credentials"})
-        }
-
-    }catch(emailErr) {
-        res.status(500).json({error: "Server error during authentication"})
+async function authorizeUser(req, res, next) {
+  const { email, password } = req.body.login;
+  try {
+    const isStoredEmail = await checkEmail(email);
+    // if false, email is in db so check pass against hashpass
+    if (!isStoredEmail) {
+      const hashedPass = await getUserPassword(email);
+      // compare sent password w/ hashed value
+      const isPassValid = await bcrypt.compare(
+        password,
+        hashedPass.password_hash
+      );
+      if (isPassValid) {
+        const token = generateJWT(email, hashedPass.id);
+        // append token and user id to req.body
+        req.body.token = token;
+        req.body.user_id = hashedPass.id;
+        next();
+      } else {
+        res.status(500).json({ error: "Invalid Credentials" });
+      }
+    } else {
+      res.status(500).json({ error: "Invalid Credentials" });
     }
-  
-   
- }
+  } catch (emailErr) {
+    res.status(500).json({ error: "Server error during authentication" });
+  }
+}
+
+
+// Email verification using CRYPTO
+function generateCryptoToken () {
+    return crypto.randomBytes(32).toString('hex')
+}
 
 module.exports = {
-    isEmailUnique,
-    hashPass,
-    generateJWT,
-    authorizeUser
-}
+  isEmailUnique,
+  hashPass,
+  generateJWT,
+  authorizeUser,
+  generateCryptoToken
+};
