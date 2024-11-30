@@ -42,7 +42,7 @@ registration.post(
 
 // come back when front end set up!!!!!
 
-const verification_link = `frontendUrl/verification/${cryptoToken}`
+const verification_link = `${process.env.FRONT_END_URL}/verification/${cryptoToken}`
 
     if (!newUser.message) {
       try {

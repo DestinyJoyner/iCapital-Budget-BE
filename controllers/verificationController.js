@@ -11,6 +11,7 @@ verification.post("/", verificationSchema, validationError, async (req, res) => 
     const {email, verification_token} = req.body
     try {
         const user = await verifyUser(email, verification_token)
+        console.log(user, "verifyd")
         if(!user){
             res.status(400).json({
                 error: "Invalid verification token or email"
