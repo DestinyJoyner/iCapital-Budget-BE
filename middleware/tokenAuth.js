@@ -3,7 +3,9 @@ require("dotenv").config();
 
 function verifyToken(req, res, next) {
   // headers => "authorization"
-  const token = req.headers["authorization"];
+  const authHeader = req.headers["authorization"];
+  // "Bearer[0] token[1]"
+  const token = authHeader && authHeader.split(" ")[1]; 
   const secret = process.env.SECRET_TOKEN;
 
   if (!token) {

@@ -3,7 +3,7 @@ const db = require("../config/dbConfig.js");
 async function getBudgets(userId) {
   try {
     const allBudgets = await db.any(
-      "SELECT id, category, amount, TO_CHAR(transaction_date, 'MM/DD/YYYY') AS transaction_date, transaction_type FROM icapital_budgets WHERE user_id=$1",
+      "SELECT id, category, amount, TO_CHAR(transaction_date, 'DD Mon YYYY') AS transaction_date, transaction_type FROM icapital_budgets WHERE user_id=$1",
       userId
     );
 

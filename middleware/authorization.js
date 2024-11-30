@@ -118,7 +118,7 @@ function generateCryptoToken () {
 // Add this to your existing authorization.js
 const authenticateToken = async (req, res, next) => {
     try {
-        const authHeader = req.headers.authorization;
+        const authHeader = req.headers["authorization"];
         // "Bearer[0] token[1]"
         const token = authHeader && authHeader.split(" ")[1]; 
 
