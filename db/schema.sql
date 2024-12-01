@@ -29,4 +29,11 @@ CREATE TABLE icapital_budgets (
 
 );
 
+DROP TABLE IF EXISTS categories;
+
+CREATE TABLE categories (
+    id SERIAL PRIMARY KEY,
+    category_name VARCHAR(100) NOT NULL
+);
+
 -- DECIMAL(10,2) -> maintains 2 decimal palces after and 10 before

@@ -9,6 +9,7 @@ const budgetController = require("./controllers/budgetController.js")
 const userController = require("./controllers/userController.js")
 const verificationController = require("./controllers/verificationController.js")
 const tokenController = require("./controllers/tokenController.js")
+const categoryController = require("./controllers/categoryController.js")
 
 // CONFIG
 const app = express()
@@ -24,6 +25,7 @@ app.use("/auth/budget", budgetController)
 app.use("/auth/user", userController)
 app.use("/auth/verification", verificationController)
 app.use("/auth/token", tokenController)
+app.use("/categories", categoryController)
 
 // DATA FILES
 const landingPageHTML = require("./data/landingPageStyle.js")
