@@ -48,7 +48,18 @@ async function createBudget(body, userId) {
       "INSERT INTO icapital_budgets (user_id, category, amount, transaction_date, transaction_type) VALUES ($1, $2, $3, $4, $5) RETURNING id, category, amount, TO_CHAR(transaction_date, 'MM/DD/YYYY') AS transaction_date, transaction_type",
       [userId, category, amount, transaction_date, transaction_type]
     );
-    return newBudget;
+// updated category totals when adding transcation
+const expensesGroupedByCategory = await groupCategoryTotals(userId)
+
+    // format {category: amount}
+    const categoryAmountObj = expensesGroupedByCategory.reduce((acc, {category_name, total_amount}) => {
+        acc[category_name] = +total_amount
+        return acc
+      }, {});
+
+    return {...newBudget,
+        category_totals: categoryAmountObj
+    };
   } catch (err) {
     return err;
   }
