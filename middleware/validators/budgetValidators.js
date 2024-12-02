@@ -18,9 +18,7 @@ function convertAmount (amount) {
 const budgetSchema = [
   body("category")
     .exists()
-    .withMessage("Category is required")
-    .trim()
-    .notEmpty(),
+    .withMessage("Category is required").isInt({ min: 1, max: 28 }).withMessage("Invalid category ID"),
 
   body("amount")
     .exists()

@@ -15,25 +15,26 @@ CREATE TABLE icapital_users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-DROP TABLE IF EXISTS icapital_budgets;
-
-CREATE TABLE icapital_budgets (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES icapital_users(id),
-    category VARCHAR(50) NOT NULL,
-    amount DECIMAL(10,2) NOT NULL,
-    transaction_date DATE DEFAULT CURRENT_DATE,
-    transaction_type VARCHAR(10) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CHECK (transaction_type IN ('income', 'expense'))
-
-);
 
 DROP TABLE IF EXISTS categories;
 
 CREATE TABLE categories (
     id SERIAL PRIMARY KEY,
     category_name VARCHAR(100) NOT NULL
+);
+
+DROP TABLE IF EXISTS icapital_budgets;
+
+CREATE TABLE icapital_budgets (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES icapital_users(id),
+    category INTEGER REFERENCES categories(id),
+    amount DECIMAL(10,2) NOT NULL,
+    transaction_date DATE DEFAULT CURRENT_DATE,
+    transaction_type VARCHAR(10) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CHECK (transaction_type IN ('income', 'expense'))
+
 );
 
 -- DECIMAL(10,2) -> maintains 2 decimal palces after and 10 before

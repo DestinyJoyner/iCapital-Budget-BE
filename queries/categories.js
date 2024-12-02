@@ -18,6 +18,17 @@ async function getAllCategories() {
     }
 }
 
+async function groupCategoryTotals (userId) {
+    try{
+        // join command get user budget EXPENSE transactions and sum them and group by the category
+        const expensesGroupedByCategory = await db.any("SELECT categories.category_name, SUM(icapital_budgets.amount) as total_amount FROM icapital_budgets JOIN categories ON icapital_budgets.category = categories.id WHERE icapital_budgets.user_id = $1 AND icapital_budgets.transaction_type='expense' GROUP BY categories.category_name", userId)
+        
+        return expensesGroupedByCategory
+    }catch(err) {
+        return err
+    }
+}
 module.exports = {
-    getAllCategories
+    getAllCategories,
+    groupCategoryTotals
 }
