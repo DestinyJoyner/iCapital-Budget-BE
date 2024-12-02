@@ -1,4 +1,5 @@
 const db = require("../config/dbConfig.js");
+const {groupCategoryTotals} = require("./categories.js")
 
 async function getBudgets(userId) {
   try {
@@ -9,9 +10,18 @@ async function getBudgets(userId) {
 
     const budgetSummary = await getBudgetSummary(userId)
 
+    const expensesGroupedByCategory = await groupCategoryTotals(userId)
+
+    // format {category: amount}
+    const categoryAmountObj = expensesGroupedByCategory.reduce((acc, {category_name, total_amount}) => {
+        acc[category_name] = +total_amount
+        return acc
+      }, {});
+
     return {
         budget_summary: budgetSummary,
-        transactions : allBudgets
+        transactions : allBudgets,
+        category_totals : categoryAmountObj
         
     }
   } catch (err) {
