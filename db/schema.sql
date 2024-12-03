@@ -11,6 +11,7 @@ CREATE TABLE icapital_users (
     password_hash VARCHAR(255) NOT NULL,
     first_name VARCHAR(100) NOT NULL,
     verification_token VARCHAR(64),
+    verification_token_expiration TIMESTAMP,
     is_verified BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
