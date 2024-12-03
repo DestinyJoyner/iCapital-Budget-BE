@@ -38,3 +38,14 @@
     <p>Hello from iCapital Budget API!</p>
     <p>If you're seeing this, email setup is working.</p>
 <% } %>
+
+
+<%# Account Password Reset Template %>
+<% if (template === 'password_reset') { %>
+    <!-- eventual verification link -->
+    <h2>Password Reset Request</h2>
+    <p>The email linked to this iCapital Budget account has requested to reset the password</p>
+    <p>You can reset your password by clicking the link below:</p>
+<a href="<%= details.verification_link %>">Reset Password</a>
+    
+<% } %>

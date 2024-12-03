@@ -12,6 +12,19 @@ async function verifyUser (email, verificationToken) {
     }
 }
 
+// store verification token in user database
+async function storeVerificationToken (verificationToken, userEmail){
+    try{
+        const addVerificationToken = await db.one("UPDATE icapital_users SET verification_token = $1 WHERE email = $2 RETURNING id, email, verification_token", [verificationToken, userEmail])
+
+        return addVerificationToken
+
+    }catch(err) {
+        return err
+    }
+} 
+
 module.exports = {
-    verifyUser
+    verifyUser,
+    storeVerificationToken
 }

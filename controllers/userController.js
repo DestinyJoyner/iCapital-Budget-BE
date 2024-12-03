@@ -47,6 +47,20 @@ user.delete(
   }
 );
 
+
+
+
+/* 
+    put request for change password
+    verify email sending request
+    crypto token verification for email sending request
+    send email for link to front end to provide email and new password
+    on submit, hash and restore new password in database
+    if successful send back authToken to navigate to sign in
+    trigger email stated password was changed 
+
+*/
+
 /* 
     {
             email,
