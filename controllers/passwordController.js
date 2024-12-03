@@ -91,4 +91,7 @@ password.post("/", async (req, res) => {
   }
 });
 
+
+// PUT/UPDATE ROUTE FOR ACCEPTING  new changed passwrod from FE
+
 module.exports = password;

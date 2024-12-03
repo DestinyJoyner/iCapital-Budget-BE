@@ -23,11 +23,16 @@ const crypto = require("crypto");
 
 async function hashPass(req, res, next) {
   try {
-    const password = req.body.login.password;
+    const password = req.body?.login.password || req.body.password;
 
     const salt = await bcrypt.genSalt();
     const hashedPass = await bcrypt.hash(password, salt);
-    req.body.login.password = hashedPass;
+    if(req.body.login){
+        req.body.login.password = hashedPass;
+    }else {
+        req.body.password = hashedPass
+    }
+    
     next();
   } catch (err) {
     res.status(404).json({
@@ -83,7 +88,7 @@ async function authorizeUser(req, res, next) {
   try {
     const isStoredEmail = await checkEmail(email);
     // if false, email is in db so check pass against hashpass
-    if (!isStoredEmail) {
+    if (isStoredEmail) {
       const hashedPass = await getUserPassword(email);
       // compare sent password w/ hashed value
       const isPassValid = await bcrypt.compare(
