@@ -63,7 +63,7 @@ async function isEmailUnique(req, res, next) {
       res.status(500).json({ error: "Database error checking email" });
     }
 
-    if (!isUnique) {
+    if (isUnique) {
       res
         .status(400)
         .json({ error: `${user_email} is linked to another account` });
