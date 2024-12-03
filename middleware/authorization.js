@@ -22,15 +22,22 @@ const crypto = require("crypto");
 // bcrypt.hash will take the inputted password by the user and salt and hash it
 
 async function hashPass(req, res, next) {
+    // console.log("hashing")
   try {
-    const password = req.body.login.password;
+    const password = req.body?.login?.password || req.body?.password;
 
     const salt = await bcrypt.genSalt();
     const hashedPass = await bcrypt.hash(password, salt);
-    req.body.login.password = hashedPass;
+    if(req.body?.login){
+        req.body.login.password = hashedPass;
+    }else {
+        req.body.password = hashedPass
+    }
+    
     next();
   } catch (err) {
-    res.status(404).json({
+    res.status(500).json({
+        message: "Password hashing error",
       error: err,
     });
   }
@@ -63,7 +70,7 @@ async function isEmailUnique(req, res, next) {
       res.status(500).json({ error: "Database error checking email" });
     }
 
-    if (!isUnique) {
+    if (isUnique) {
       res
         .status(400)
         .json({ error: `${user_email} is linked to another account` });
@@ -83,7 +90,7 @@ async function authorizeUser(req, res, next) {
   try {
     const isStoredEmail = await checkEmail(email);
     // if false, email is in db so check pass against hashpass
-    if (!isStoredEmail) {
+    if (isStoredEmail) {
       const hashedPass = await getUserPassword(email);
       // compare sent password w/ hashed value
       const isPassValid = await bcrypt.compare(

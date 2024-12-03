@@ -11,6 +11,7 @@ const {
   generateCryptoToken
 } = require("../middleware/authorization.js");
 const { createUser } = require("../queries/registration.js");
+const {storeVerificationToken} = require("../queries/verification.js")
 
 const ejs = require("ejs");
 const path = require("path");
@@ -32,6 +33,7 @@ registration.post(
    try{
     // VERIFY EMAIL BEFORE CREATING USER IN DB
     const cryptoToken = generateCryptoToken()
+
     // append token to login obj in body
     req.body.login.verification_token = cryptoToken
     // boolean to track if user verifies email -> also need updated users table column for verification
@@ -47,6 +49,8 @@ const verification_link = `${process.env.FRONT_END_URL}/verification/${cryptoTok
     if (!newUser.message) {
       try {
         const { email, id } = newUser;
+        // STORE TOKEN AFTER USER IS CREATED
+        await storeVerificationToken(cryptoToken, email);
 
         const token = generateJWT(email, id);
         newUser.token = token;
