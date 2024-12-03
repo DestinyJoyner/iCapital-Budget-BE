@@ -10,6 +10,11 @@ const ejs = require("ejs");
 const path = require("path");
 const transporter = require("../config/mailerConfig.js");
 require("dotenv").config();
+const {verifyCryptoToken} = require("../middleware/tokenAuth.js")
+const {hashPass, generateJWT} = require("../middleware/authorization.js")
+const {updatePassword} = require("../queries/password.js")
+const {passwordSchema} = require("../middleware/validators/passwordValidator.js")
+const {validationError} = require("../middleware/validators/errorValidator.js")
 
 // route to verify validity of the token AFTER initializing password reset process => then FE form submission of new password route to PUT route
 
@@ -93,5 +98,40 @@ password.post("/", async (req, res) => {
 
 
 // PUT/UPDATE ROUTE FOR ACCEPTING  new changed passwrod from FE
+// auth/password/reset
+password.put("/reset", passwordSchema, validationError, verifyCryptoToken, hashPass, async (req,res) => {
+   try {
+    const {email, password, verificationToken } = req.body
+
+    // returns id and email
+    const updatedPassword = await updatePassword(email, password, verificationToken)
+
+    if (!updatedPassword.message){
+        // create new JWT token
+        const authToken = generateJWT(updatedPassword.email, updatedPassword.id)
+
+        // send email to user for password change
+        await transporter.sendMail({
+            from: process.env.EMAIL_USER,
+            to: updatedPassword.email,
+            subject: "Password Changed Successfully",
+            html: "Your password has been updated."
+        });
+
+        res.status(200).json({
+            message:"Password changed ",
+            token:authToken
+        })
+    }
+    else {
+        res.status(400).json({
+            message: "Failed to change password",
+            error: updatedPassword.message
+        })
+    }
+   }catch(err) {
+    res.status(500).json({error: "Error updating password"})
+   }
+})
 
 module.exports = password;
