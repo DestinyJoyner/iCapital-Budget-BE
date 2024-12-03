@@ -99,6 +99,7 @@ password.post("/", async (req, res) => {
 
 // PUT/UPDATE ROUTE FOR ACCEPTING  new changed passwrod from FE
 // auth/password/reset
+// passwordSchema, validationError, verifyCryptoToken, hashPass
 password.put("/reset", passwordSchema, validationError, verifyCryptoToken, hashPass, async (req,res) => {
    try {
     const {email, password, verificationToken } = req.body
@@ -120,7 +121,8 @@ password.put("/reset", passwordSchema, validationError, verifyCryptoToken, hashP
 
         res.status(200).json({
             message:"Password changed ",
-            token:authToken
+            token:authToken,
+            email: updatedPassword.email
         })
     }
     else {
@@ -133,5 +135,9 @@ password.put("/reset", passwordSchema, validationError, verifyCryptoToken, hashP
     res.status(500).json({error: "Error updating password"})
    }
 })
+
+// password.put("/reset", (req,res) => {
+//     res.status(200).json("yes it works!")
+// })
 
 module.exports = password;

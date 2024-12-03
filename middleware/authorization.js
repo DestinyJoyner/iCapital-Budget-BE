@@ -22,12 +22,13 @@ const crypto = require("crypto");
 // bcrypt.hash will take the inputted password by the user and salt and hash it
 
 async function hashPass(req, res, next) {
+    // console.log("hashing")
   try {
-    const password = req.body?.login.password || req.body.password;
+    const password = req.body?.login?.password || req.body?.password;
 
     const salt = await bcrypt.genSalt();
     const hashedPass = await bcrypt.hash(password, salt);
-    if(req.body.login){
+    if(req.body?.login){
         req.body.login.password = hashedPass;
     }else {
         req.body.password = hashedPass
@@ -35,7 +36,8 @@ async function hashPass(req, res, next) {
     
     next();
   } catch (err) {
-    res.status(404).json({
+    res.status(500).json({
+        message: "Password hashing error",
       error: err,
     });
   }
