@@ -122,8 +122,7 @@ function generateCryptoToken () {
 
 // authenticate authToken sent from front end
 
-// Add this to your existing authorization.js
-const authenticateToken = async (req, res, next) => {
+async function authenticateToken (req, res, next) {
     try {
         const authHeader = req.headers["authorization"];
         // "Bearer[0] token[1]"
@@ -148,11 +147,17 @@ const authenticateToken = async (req, res, next) => {
     }
 };
 
+function generatePasscode () {
+  const sixDigitCode = Math.floor(100000 + Math.random() * 900000)
+  return sixDigitCode.toString()
+}
+
 module.exports = {
   isEmailUnique,
   hashPass,
   generateJWT,
   authorizeUser,
   generateCryptoToken,
-  authenticateToken
+  authenticateToken,
+  generatePasscode,
 };
