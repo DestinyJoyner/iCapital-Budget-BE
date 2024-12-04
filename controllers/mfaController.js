@@ -8,14 +8,16 @@ const {sendEmail, emailTemplate} = require("../config/mailerConfig.js")
 mfa.post("/login", authorizeUser, async (req,res) => {
    try {
      // from authorize user
-     const {user_id, email} = req.body
+     const {user_id} = req.body
+     const {email} = req.body.login
+    
 
      // speakeasy - generate secret, store in table for user
      const userPasscode = generatePasscode()
      const storedUserPasscode = await storePasscode(user_id, userPasscode)
  
      // send email
-     const emailBody = await emailTemplate("passcode", {details : userPasscode})
+     const emailBody = await emailTemplate("passcode", {passcode:userPasscode})
  
      const emailSend = await sendEmail ({receipient: email, emailBody: emailBody, subject:"iCapital Login Passcode"})
  

@@ -6,10 +6,6 @@ const {
   storeVerificationToken,
   isValidToken,
 } = require("../queries/verification.js");
-// const ejs = require("ejs");
-// const path = require("path");
-// const transporter = require("../config/mailerConfig.js");
-// require("dotenv").config();
 const { verifyCryptoToken } = require("../middleware/tokenAuth.js");
 const { hashPass, generateJWT } = require("../middleware/authorization.js");
 const { updatePassword } = require("../queries/password.js");
@@ -73,22 +69,6 @@ password.post("/", async (req, res) => {
           emailBody: emailBody,
           subject: "iCapital Budget Account Password Reset",
         });
-
-        // const emailBody = await ejs.renderFile(
-        //   path.join(__dirname, "../data/emailTemplate.ejs"),
-        //   {
-        //     template: "password_reset",
-        //     details: { verification_link },
-        //   }
-        // );
-
-        // //   send email
-        // await transporter.sendMail({
-        //   from: process.env.EMAIL_USER,
-        //   to: email,
-        //   subject: "iCapital Budget Account Password Reset",
-        //   html: emailBody,
-        // });
 
         res.status(200).json({
           message: "Password reset link has been sent",

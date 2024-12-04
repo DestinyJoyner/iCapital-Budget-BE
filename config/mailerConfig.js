@@ -47,7 +47,6 @@ async function emailTemplate (template, detailsObj) {
 }
 
 module.exports = {
-    transporter,
     sendEmail,
     emailTemplate
 }
