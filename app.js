@@ -11,6 +11,7 @@ const verificationController = require("./controllers/verificationController.js"
 const tokenController = require("./controllers/tokenController.js")
 const categoryController = require("./controllers/categoryController.js")
 const passwordController = require("./controllers/passwordController.js")
+const mfaController = require("./controllers/mfaController.js")
 
 // CONFIG
 const app = express()
@@ -28,6 +29,7 @@ app.use("/auth/verification", verificationController)
 app.use("/auth/token", tokenController)
 app.use("/categories", categoryController)
 app.use("/auth/password", passwordController)
+app.use("/auth/mfa", mfaController)
 // DATA FILES
 const landingPageHTML = require("./data/landingPageStyle.js")
 

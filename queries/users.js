@@ -38,8 +38,20 @@ async function deleteUser (userId) {
     }
 }
 
+// get user info from mfa update
+async function getUserInfo (userId) {
+  try {
+const userInfo = await db.one("SELECT email, id FROM icapital_users WHERE id= $1", userId)
+
+return userInfo
+  }catch(err) {
+    return err
+  }
+}
+
 
 module.exports = {
   getUserPassword,
-  deleteUser
+  deleteUser,
+  getUserInfo
 };

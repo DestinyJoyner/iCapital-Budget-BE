@@ -6,15 +6,16 @@ const {
   storeVerificationToken,
   isValidToken,
 } = require("../queries/verification.js");
-const ejs = require("ejs");
-const path = require("path");
-const transporter = require("../config/mailerConfig.js");
-require("dotenv").config();
-const {verifyCryptoToken} = require("../middleware/tokenAuth.js")
-const {hashPass, generateJWT} = require("../middleware/authorization.js")
-const {updatePassword} = require("../queries/password.js")
-const {passwordSchema} = require("../middleware/validators/passwordValidator.js")
-const {validationError} = require("../middleware/validators/errorValidator.js")
+const { verifyCryptoToken } = require("../middleware/tokenAuth.js");
+const { hashPass, generateJWT } = require("../middleware/authorization.js");
+const { updatePassword } = require("../queries/password.js");
+const {
+  passwordSchema,
+} = require("../middleware/validators/passwordValidator.js");
+const {
+  validationError,
+} = require("../middleware/validators/errorValidator.js");
+const { emailTemplate, sendEmail } = require("../config/mailerConfig.js");
 
 // route to verify validity of the token AFTER initializing password reset process => then FE form submission of new password route to PUT route
 
@@ -59,20 +60,14 @@ password.post("/", async (req, res) => {
 
         const verification_link = `${process.env.FRONT_END_URL}/password-reset/${verification_token}`;
 
-        const emailBody = await ejs.renderFile(
-          path.join(__dirname, "../data/emailTemplate.ejs"),
-          {
-            template: "password_reset",
-            details: { verification_link },
-          }
-        );
+        const emailBody = await emailTemplate("password_reset", {
+          verification_link,
+        });
 
-        //   send email
-        await transporter.sendMail({
-          from: process.env.EMAIL_USER,
-          to: email,
+        const emailSend = await sendEmail({
+          receipient: email,
+          emailBody: emailBody,
           subject: "iCapital Budget Account Password Reset",
-          html: emailBody,
         });
 
         res.status(200).json({
@@ -96,45 +91,56 @@ password.post("/", async (req, res) => {
   }
 });
 
-
 // PUT/UPDATE ROUTE FOR ACCEPTING  new changed passwrod from FE
 // auth/password/reset
 // passwordSchema, validationError, verifyCryptoToken, hashPass
-password.put("/reset", passwordSchema, validationError, verifyCryptoToken, hashPass, async (req,res) => {
-   try {
-    const {email, password, verificationToken } = req.body
+password.put(
+  "/reset",
+  passwordSchema,
+  validationError,
+  verifyCryptoToken,
+  hashPass,
+  async (req, res) => {
+    try {
+      const { email, password, verificationToken } = req.body;
 
-    // returns id and email
-    const updatedPassword = await updatePassword(email, password, verificationToken)
+      // returns id and email
+      const updatedPassword = await updatePassword(
+        email,
+        password,
+        verificationToken
+      );
 
-    if (!updatedPassword.message){
+      if (!updatedPassword.message) {
         // create new JWT token
-        const authToken = generateJWT(updatedPassword.email, updatedPassword.id)
+        const authToken = generateJWT(
+          updatedPassword.email,
+          updatedPassword.id
+        );
 
         // send email to user for password change
-        await transporter.sendMail({
-            from: process.env.EMAIL_USER,
-            to: updatedPassword.email,
-            subject: "Password Changed Successfully",
-            html: "Your password has been updated."
+        const emailSend = await sendEmail({
+          receipient: updatedPassword.email,
+          emailBody: "Your password has been updated.",
+          subject: "Password Changed Successfully",
         });
 
         res.status(200).json({
-            message:"Password changed ",
-            token:authToken,
-            email: updatedPassword.email
-        })
-    }
-    else {
+          message: "Password changed ",
+          token: authToken,
+          email: updatedPassword.email,
+        });
+      } else {
         res.status(400).json({
-            message: "Failed to change password",
-            error: updatedPassword.message
-        })
+          message: "Failed to change password",
+          error: updatedPassword.message,
+        });
+      }
+    } catch (err) {
+      res.status(500).json({ error: "Error updating password" });
     }
-   }catch(err) {
-    res.status(500).json({error: "Error updating password"})
-   }
-})
+  }
+);
 
 // password.put("/reset", (req,res) => {
 //     res.status(200).json("yes it works!")

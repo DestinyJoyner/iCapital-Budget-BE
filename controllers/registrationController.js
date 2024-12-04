@@ -8,19 +8,11 @@ const {
   isEmailUnique,
   hashPass,
   generateJWT,
-  generateCryptoToken
+  generateCryptoToken,
 } = require("../middleware/authorization.js");
 const { createUser } = require("../queries/registration.js");
-const {storeVerificationToken} = require("../queries/verification.js")
-
-const ejs = require("ejs");
-const path = require("path");
-const transporter = require("../config/mailerConfig.js");
-require("dotenv").config();
-
-registration.get("/", (req, res) => {
-  res.status(200).json("Registration Page");
-});
+const { storeVerificationToken } = require("../queries/verification.js");
+const { emailTemplate, sendEmail } = require("../config/mailerConfig.js");
 
 // CREATE NEW USER
 registration.post(
@@ -30,65 +22,56 @@ registration.post(
   isEmailUnique,
   hashPass,
   async (req, res) => {
-   try{
-    // VERIFY EMAIL BEFORE CREATING USER IN DB
-    const cryptoToken = generateCryptoToken()
+    try {
+      // VERIFY EMAIL BEFORE CREATING USER IN DB
+      const cryptoToken = generateCryptoToken();
 
-    // append token to login obj in body
-    req.body.login.verification_token = cryptoToken
-    // boolean to track if user verifies email -> also need updated users table column for verification
-    req.body.login.is_verified = false
+      // append token to login obj in body
+      req.body.login.verification_token = cryptoToken;
+      // boolean to track if user verifies email -> also need updated users table column for verification
+      req.body.login.is_verified = false;
 
-    const newUser = await createUser(req.body.login);
+      const newUser = await createUser(req.body.login);
 
+      const verification_link = `${process.env.FRONT_END_URL}/verification/${cryptoToken}`;
 
-// come back when front end set up!!!!!
+      if (!newUser.message) {
+        try {
+          const { email, id } = newUser;
+          // STORE TOKEN AFTER USER IS CREATED
+          await storeVerificationToken(cryptoToken, email);
 
-const verification_link = `${process.env.FRONT_END_URL}/verification/${cryptoToken}`
+          const token = generateJWT(email, id);
+          newUser.token = token;
 
-    if (!newUser.message) {
-      try {
-        const { email, id } = newUser;
-        // STORE TOKEN AFTER USER IS CREATED
-        await storeVerificationToken(cryptoToken, email);
+          // access ejs file and send email here
+          const emailBody = await emailTemplate("registration", 
+             { ...newUser, verification_link },
+          );
 
-        const token = generateJWT(email, id);
-        newUser.token = token;
+          const emailSend = await sendEmail({
+            receipient: email,
+            emailBody: emailBody,
+            subject: "iCapital Budget Account Creation",
+          });
 
-        // access ejs file and send email here:
-        const emailBody = await ejs.renderFile(
-          path.join(__dirname, "../data/emailTemplate.ejs"),
-          {
-            template: "registration",
-            details: {...newUser, verification_link}
-          }
-        );
-
-        //   send email
-        await transporter.sendMail({
-          from: process.env.EMAIL_USER,
-          to: email,
-          subject: "iCapital Budget Account Creation",
-          html: emailBody,
-        });
-
-        res.status(200).json(newUser);
-      } catch (jwtErr) {
+          res.status(200).json(newUser);
+        } catch (jwtErr) {
+          res.status(500).json({
+            error: jwtErr,
+          });
+        }
+      } else {
         res.status(500).json({
-          error: jwtErr,
+          error: newUser.message,
         });
       }
-    } else {
+    } catch (err) {
       res.status(500).json({
-        error: newUser.message,
+        message: "Error creating user account",
+        error: err,
       });
     }
-   }catch(err){
-    res.status(500).json({
-        message: "Error creating user account",
-        error: err
-      })
-   }
   }
 );
 
