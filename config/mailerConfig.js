@@ -27,6 +27,7 @@ await transporter.sendMail({
 });
 } catch(err) {
     console.log("error sending email", err)
+    return err
 }
 }
 

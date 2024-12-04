@@ -6,12 +6,8 @@
     <p>Hello <%= details.first_name %>,</p>
     <p>Thank you for creating an account with us.</p>
     <p>Please verify your email by clicking the link below:</p>
-<a href="<%= details.verification_link %>">Verify Email</a>
-    
+<a href="<%= details.verification_link %>">Verify Email</a>  
 <% } %>
-
-
-<%# Sign In MFA Verification Template %>
 
 
 <%# Deletion Email Template%>
@@ -31,15 +27,6 @@
 <% } %>
 
 
-
-<%# Test Email Template%>
-<% if (template === 'test') { %>
-    <h1>Test Email</h1>
-    <p>Hello from iCapital Budget API!</p>
-    <p>If you're seeing this, email setup is working.</p>
-<% } %>
-
-
 <%# Account Password Reset Template %>
 <% if (template === 'password_reset') { %>
     <!-- eventual verification link -->
@@ -50,4 +37,22 @@
 <a href="<%= details.verification_link %>">Reset Password</a>
 <p>If you didn't request this password reset, please ignore this email or contact support if you have concerns.</p>
     
+<% } %>
+
+<%# Login Passcode Template%>
+<% if (template === 'passcode') { %>
+    <h2>Login Passcode</h2>
+    <p>Here is your login passcode <%= details.passcode %> </p>
+<% } %>
+
+
+
+
+
+
+<%# Test Email Template%>
+<% if (template === 'test') { %>
+    <h1>Test Email</h1>
+    <p>Hello from iCapital Budget API!</p>
+    <p>If you're seeing this, email setup is working.</p>
 <% } %>
