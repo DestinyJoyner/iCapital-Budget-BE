@@ -45,9 +45,9 @@ registration.post(
           newUser.token = token;
 
           // access ejs file and send email here
-          const emailBody = await emailTemplate("registration", {
-            details: { ...newUser, verification_link },
-          });
+          const emailBody = await emailTemplate("registration", 
+             { ...newUser, verification_link },
+          );
 
           const emailSend = await sendEmail({
             receipient: email,

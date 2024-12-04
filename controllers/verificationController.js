@@ -9,10 +9,10 @@ const {validationError} = require("../middleware/validators/errorValidator.js")
 // route for frontend to ping from verification email to wait for response for verification
 verification.post("/", verificationSchema, validationError, async (req, res) => {
     const {email, verification_token} = req.body
-    console.log(req.body, "verification from fe")
+    // console.log(req.body, "verification from fe")
     try {
         const user = await verifyUser(email, verification_token)
-        console.log(user, "verifyd")
+        // console.log(user, "verifyd")
         if(!user){
             res.status(400).json({
                 error: "Invalid verification token or email"
