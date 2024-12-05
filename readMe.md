@@ -130,13 +130,21 @@ git clone https://github.com/DestinyJoyner/iCapital-Budget-BE.git
 
 ## Environment Variables
 PORT=3001
+
 PG_HOST=localhost
+
 PG_PORT=5432
+
 PG_DATABASE=icapital_dev
+
 PG_USER=postgres
+
 EMAIL_USER=your.email@gmail.com
+
 EMAIL_PASS=your-app-specific-password
+
 JWT_SECRET=your-jwt-secret
+
 SECRET_TOKEN= hexadecimal value
 
 ## Error Handling
