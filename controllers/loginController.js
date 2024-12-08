@@ -18,14 +18,15 @@ const isValid = await verifyPasscode(user_id, passcode)
 
 if(isValid){
     const userInfo = await getUserInfo(user_id)
-    const {email, id} = userInfo
+    const {email, id, first_name} = userInfo
     // generate authToken
     const token = generateJWT(email, id )
     res.status(200).json({
         message: "login success",
         token: token,
         email: email,
-        user_id: id
+        user_id: id,
+        first_name: first_name
     })
 
 }else {
