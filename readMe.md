@@ -3,6 +3,42 @@
 ## Description
 A budgeting application that allows users to track their income and expenses. Features secure user authentication with email verification and multi-factor authentication. 
 
+### Frontend Repository
+- Frontend Repository: [iCapital Budget Frontend](https://github.com/DestinyJoyner/iCapital-Budget-FE)
+
+## API Links
+- Deployed API: [https://icapital-budget-be.onrender.com/](https://icapital-budget-be.onrender.com/)
+- Local Development: http://localhost:3001
+
+## Database Schema
+
+### Database Relationships
+- Users can have multiple budget entries
+- Each budget entry belongs to one category
+- Categories can be used by multiple budget entries
+
+### Setup Instructions
+1. Create database:
+```sql
+CREATE DATABASE icapital_dev;
+```
+
+2. Run schema:
+```bash
+npm run dbinit
+```
+
+3. Seed initial data:
+```bash
+npm run dbseed
+```
+
+### Database Structure
+The database consists of three main tables:
+- `icapital_users`: Stores user information and authentication details
+- `categories`: Contains predefined budget categories
+- `icapital_budgets`: Tracks all user budget transactions
+
 ## Features
 
 ### User Authentication
@@ -67,9 +103,7 @@ A budgeting application that allows users to track their income and expenses. Fe
    - Passcode verified
    - JWT token issued
 
-## API Links
-- Deployed API: [https://icapital-budget-be.onrender.com/](https://icapital-budget-be.onrender.com/)
-- Local Development: http://localhost:3001
+
 
 ## Tech Stack
 ### Backend Framework
