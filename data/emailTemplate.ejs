@@ -43,6 +43,22 @@
 <% if (template === 'passcode') { %>
     <h2>Login Passcode</h2>
     <p>Here is your login passcode <%= details.passcode %> </p>
+    <p>Note: This passcode will expire in 1 hour.</p>
+<% } %>
+
+<%# Resend Verification Template %>
+<% if (template === 'resend_verification') { %>
+    <h2>Verify Your iCapital Budget Account</h2>
+    
+    <p>A new verification link has been requested for your iCapital Budget account.</p>
+    
+    <p>Please click the link below to verify your email address:</p>
+    
+    <a href="<%= details.verification_link %>">Verify Email</a>
+    
+    <p>Note: This verification link will expire in 1 hour.</p>
+    
+    <p>If you didn't request this verification link, please ignore this email.</p>
 <% } %>
 
 
