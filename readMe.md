@@ -141,12 +141,20 @@ The database consists of three main tables:
 
 #### Authentication Routes
 - `POST /auth/register` - Register new user
-- `POST /auth/login` - User login
+- `POST /auth/login` - Initial login
+- `POST /auth/mfa/verify` - Verify MFA passcode and complete login
+- `POST /auth/verification/resend-token` - Request new verification email
+- `POST /auth/verification` - Verify email address
+- `POST /auth/password` - Request password reset email
+- `POST /auth/password/verify-token/:verificationToken` - Complete password reset
+
+#### Budget Routes
 - `POST /auth/budget` - Add transaction
 - `GET /auth/budget` - Get transactions
+
+#### User Management Routes
 - `DELETE /auth/user` - Delete account
-- `POST /auth/mfa/verify` - Passcode verification
-- `POST /auth/reset` - Password reset
+
 
 ## Installation
 
