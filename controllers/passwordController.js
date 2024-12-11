@@ -119,7 +119,7 @@ password.put(
         );
 
         // send email to user for password change
-        const emailSend = await sendEmail({
+        sendEmail({
           receipient: updatedPassword.email,
           emailBody: "Your password has been updated.",
           subject: "Password Changed Successfully",
@@ -129,6 +129,7 @@ password.put(
           message: "Password changed ",
           token: authToken,
           email: updatedPassword.email,
+          first_name: updatedPassword["first_name"]
         });
       } else {
         res.status(400).json({
