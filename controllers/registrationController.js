@@ -44,18 +44,27 @@ registration.post(
           const token = generateJWT(email, id);
           newUser.token = token;
 
-          // access ejs file and send email here
-          const emailBody = await emailTemplate("registration", 
-             { ...newUser, verification_link },
-          );
-
-          const emailSend = await sendEmail({
-            receipient: email,
-            emailBody: emailBody,
-            subject: "iCapital Budget Account Creation",
-          });
-
-          res.status(200).json(newUser);
+          try {
+            // access ejs file and send email here
+            const emailBody = await emailTemplate("registration", {
+              ...newUser,
+              verification_link,
+            });
+            sendEmail({
+              receipient: email,
+              emailBody: emailBody,
+              subject: "iCapital Budget Account Creation",
+            });
+            res.status(200).json(newUser);
+          } catch (err) {
+            console.log("Error sending email", err);
+            res.status(200).json({
+              ...newUser,
+              emailError:
+                "Account created but verification email failed to send",
+            });
+            return;
+          }
         } catch (jwtErr) {
           res.status(500).json({
             error: jwtErr,
